@@ -10,6 +10,15 @@ WHITE = (1, 1, 1)
 
 
 class LightingWidget(Widget):
+    def __init__(self, **kwargs):
+
+        if 'led_count' in kwargs:
+            self._led_count = kwargs.pop('led_count')
+        else:
+            self._led_count = 10
+
+        super().__init__(**kwargs)
+
     def prepare(self):
         self.time = 0
 
@@ -17,7 +26,7 @@ class LightingWidget(Widget):
             # Default ellipses
             Color(*WHITE)
             self.ellipses = [
-                Ellipse(pos=(i, i), size=(10, 10)) for i in range(60)
+                Ellipse(pos=(i, i), size=(10, 10)) for i in range(self._led_count)
             ]
 
         # We'll update our variables in a clock
@@ -34,7 +43,7 @@ class LightingWidget(Widget):
 
 class LightingApp(App):
     def build(self):
-        widget = LightingWidget()
+        widget = LightingWidget(led_count=60)
         widget.prepare()
         return widget
 
