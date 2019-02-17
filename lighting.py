@@ -20,25 +20,30 @@ class LightingWidget(Widget):
         super().__init__(**kwargs)
 
     def prepare(self):
-        self.time = 0
+        self._time = 0
+        self._leds = []
 
         with self.canvas:
-            # Default ellipses
-            Color(*WHITE)
-            self.ellipses = [
-                Ellipse(pos=(i, i), size=(10, 10)) for i in range(self._led_count)
-            ]
+            for i in range(self._led_count):
+                # append the colors to our list of colors so we can adjust them lateron
+                self._leds.append(Color(*WHITE))
+                x = 100 + 100 * math.cos(i * tau / self._led_count)
+                y = 100 + 100 * math.sin(i * tau / self._led_count)
+                Ellipse(pos=(x, y), size=(10, 10))
 
         # We'll update our variables in a clock
         Clock.schedule_interval(self.update_animation, 1 / 20)
 
     def update_animation(self, delta):
-        self.time += delta
-        phi = self.time / 3
-        count = len(self.ellipses)
-        for i, e in enumerate(self.ellipses):
-            dphi = i * tau / count
-            e.pos = (200 + 100 * math.cos(phi + dphi), 200 + 100 * math.sin(phi + dphi))
+        self._time += delta
+
+        for i in range(self._led_count):
+            dphi = i * tau / self._led_count
+            self._leds[i].rgb = (
+                (1 + math.sin(self._time + dphi)) / 2,
+                (1 + math.sin(self._time + 1.1 * dphi + tau / 3)) / 2,
+                (1 + math.sin(self._time + dphi ** 1.1 + 2 * tau / 3)) / 2,
+            )
 
 
 class LightingApp(App):
