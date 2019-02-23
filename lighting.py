@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from rgb_triplet import rgb
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.graphics import Color, Ellipse
@@ -50,6 +51,9 @@ class Animation:
     def generate(self, delta):
         self._time += delta
 
+        # startup ramp
+        scale = min(1, self._time / 8) ** 1.5
+
         res = []
         for i in range(self._led_count):
             # angle of the current LED
@@ -57,7 +61,7 @@ class Animation:
             r = math.sin(self._time * 1.05 + phi)
             g = math.sin(self._time + phi)
             b = math.sin(self._time * 0.95 + phi)
-            res.append((r, g, b))
+            res.append(scale * rgb(r, g, b))
         return res
 
 
