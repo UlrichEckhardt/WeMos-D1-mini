@@ -35,15 +35,23 @@ class LightingWidget(Widget):
         Clock.schedule_interval(self.update_animation, 1 / 20)
 
     def update_animation(self, delta):
-        self._time += delta
+        pattern = self._animation(delta)
 
         for i in range(self._led_count):
-            dphi = i * tau / self._led_count
-            self._leds[i].rgb = (
-                (1 + math.sin(self._time + dphi)) / 2,
-                (1 + math.sin(self._time + 1.1 * dphi + tau / 3)) / 2,
-                (1 + math.sin(self._time + dphi ** 1.1 + 2 * tau / 3)) / 2,
-            )
+            self._leds[i].rgb = pattern[i]
+
+    def _animation(self, delta):
+        self._time += delta
+
+        res = []
+        for i in range(self._led_count):
+            # angle of the current LED
+            phi = i * tau / self._led_count
+            r = math.sin(self._time * 1.05 + phi)
+            g = math.sin(self._time + phi)
+            b = math.sin(self._time * 0.95 + phi)
+            res.append((r, g, b))
+        return res
 
 
 class LightingApp(App):
