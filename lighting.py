@@ -54,6 +54,9 @@ class Animation:
         # startup ramp
         scale = min(1, self._time / 8) ** 1.5
 
+        # white color base
+        white_base = 0.7
+
         res = []
         for i in range(self._led_count):
             # angle of the current LED
@@ -62,7 +65,8 @@ class Animation:
             color = (rgb.RED * math.sin(self._time * 1.05 + phi)
                      + rgb.GREEN * math.sin(self._time + phi)
                      + rgb.BLUE * math.sin(self._time * 0.95 + phi))
-            res.append(scale * color)
+            res.append(scale * color * (1 - white_base)
+                       + scale * rgb.WHITE * white_base)
         return res
 
 
