@@ -24,3 +24,10 @@ class rgb(collections.namedtuple('rgb', ['r', 'g', 'b'])):
         """multiply by a scalar"""
         return self * other
 
+# unit vectors with the according color components
+rgb.RED = rgb(1, 0, 0)
+rgb.GREEN = rgb(0, 1, 0)
+rgb.BLUE = rgb(0, 0, 1)
+
+# white vector
+rgb.WHITE = rgb.RED + rgb.GREEN + rgb.BLUE
