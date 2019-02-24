@@ -58,10 +58,11 @@ class Animation:
         for i in range(self._led_count):
             # angle of the current LED
             phi = i * tau / self._led_count
-            r = math.sin(self._time * 1.05 + phi)
-            g = math.sin(self._time + phi)
-            b = math.sin(self._time * 0.95 + phi)
-            res.append(scale * rgb(r, g, b))
+
+            color = (rgb.RED * math.sin(self._time * 1.05 + phi)
+                     + rgb.GREEN * math.sin(self._time + phi)
+                     + rgb.BLUE * math.sin(self._time * 0.95 + phi))
+            res.append(scale * color)
         return res
 
 
