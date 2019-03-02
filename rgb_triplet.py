@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
-import collections
+try:
+    from collections import namedtuple
+except ImportError:
+    # micropython doesn't have collections but it does have a suitable ucollections
+    from ucollections import namedtuple
 
-class rgb(collections.namedtuple('rgb', ['r', 'g', 'b'])):
+class rgb(namedtuple('rgb', ['r', 'g', 'b'])):
     """RGB triplet
     
     Apart from the named elements, it supports a few operations you would
