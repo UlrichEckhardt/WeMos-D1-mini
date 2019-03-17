@@ -1,6 +1,24 @@
 https://wiki.wemos.cc/products:retired:d1_mini_v3.0.0
 https://wiki.wemos.cc/products:d1:d1_mini
 
+# connecting to the D1
+
+    screen /dev/ttyUSB0 115200
+    # hit Control-D for a soft reset
+    # hit Control-E for paste mode
+
+
+# setting up the virtual environment for the simulation
+
+    . env/bin/activate.fish
+
+
+# TODO
+
+ * Calibrate light intensity. What is the perceived illumination comparing
+   all LEDs at 50% to only half of them at 100%?
+
+
 Pins:
 
 D0: 16
