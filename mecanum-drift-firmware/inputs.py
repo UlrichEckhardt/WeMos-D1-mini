@@ -5,7 +5,9 @@ from array import array
 
 # number of samples to average over
 _QUEUE_SIZE = const(10)
-
+# valid range for sample values, higher values are discarded
+_MIN_SAMPLE_VALUE = const(1000)
+_MAX_SAMPLE_VALUE = const(2000)
 
 class _Pin(Pin):
     def __init__(self, pin_nr):
@@ -21,8 +23,10 @@ class _Pin(Pin):
         if self.value():
             self.high_state = now
         else:
-            self.samples[self.idx] = ticks_diff(now, self.high_state)
-            self.idx = (1 + self.idx) % _QUEUE_SIZE
+            diff = ticks_diff(now, self.high_state)
+            if _MIN_SAMPLE_VALUE <= diff <= _MAX_SAMPLE_VALUE:
+                self.samples[self.idx] = diff
+                self.idx = (1 + self.idx) % _QUEUE_SIZE
 
 
 class DutyCycle:
