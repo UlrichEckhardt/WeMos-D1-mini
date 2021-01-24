@@ -12,6 +12,7 @@ upload: ampy-setup-check
 	ampy --port "${DEVICE}" put inputs.py
 	ampy --port "${DEVICE}" put main.py
 	ampy --port "${DEVICE}" put mecanum.py
+	ampy --port "${DEVICE}" put outputs.py
 .PHONY: upload
 
 # start the firmware on the D1
