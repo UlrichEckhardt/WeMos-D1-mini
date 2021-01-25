@@ -3,6 +3,7 @@ import inputs
 from utime import sleep_ms
 import micropython
 import machine
+import math
 
 # receiver channel 2
 PIN_NICK = d1mini.PIN_D3
@@ -40,6 +41,25 @@ def calibrate_inputs(inputs):
     global _minima, _maxima
     _minima, _maxima = minima, maxima
 
+def filter_inputs(values):
+    """transform input values
+
+    The resulting output is a vector of a length not greater than one. The code
+    uses the absolute value of the three components to determine the lenght of
+    the resulting vector (L-∞ norm), clamped to a maximum of one.
+    """
+    # compute L-∞ norm
+    norm = max(abs(r) for r in values)
+    if norm <= 0.001:
+        # avoid divisions by zero-like values
+        return (0, 0, 0)
+    # compute L-1 norm, which limits the valid result vectors
+    length = sum(abs(x) for x in values)
+    # compute scale factor
+    scale = min(norm, 1) / length
+    # scale inputs
+    return tuple(r * scale for r in values)
+
 def run():
     """main entry point of the firmware"""
     # init inputs
@@ -51,6 +71,7 @@ def run():
     while True:
         v_in = dc.value()
         v_scaled = scale_inputs(v_in)
-        print(tuple('{:4d}'.format(i) for i in v_in), tuple('{:+1.2f}'.format(i) for i in v_scaled))
+        v_filtered = filter_inputs(v_scaled)
+        print(tuple('{:+1.2f}'.format(i) for i in v_scaled), tuple('{:+1.2f}'.format(i) for i in v_filtered))
         sleep_ms(500)
 
