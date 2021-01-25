@@ -4,6 +4,7 @@ from utime import sleep_ms
 import micropython
 import machine
 import math
+from mecanum import MecanumDrive
 
 # receiver channel 2
 PIN_NICK = d1mini.PIN_D3
@@ -68,10 +69,14 @@ def run():
     sleep_ms(200)
     calibrate_inputs(dc)
 
+    md = MecanumDrive()
     while True:
         v_in = dc.value()
         v_scaled = scale_inputs(v_in)
         v_filtered = filter_inputs(v_scaled)
-        print(tuple('{:+1.2f}'.format(i) for i in v_scaled), tuple('{:+1.2f}'.format(i) for i in v_filtered))
+        v_move = md.move(*v_filtered)
+        print(tuple('{:+1.2f}'.format(i) for i in v_scaled),
+              tuple('{:+1.2f}'.format(i) for i in v_filtered),
+              tuple('{:+1.2f}'.format(i) for i in v_move))
         sleep_ms(500)
 
