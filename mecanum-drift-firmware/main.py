@@ -13,6 +13,9 @@ PIN_ROLL = d1mini.PIN_D1
 # receiver channel 1
 PIN_YAW = d1mini.PIN_D4
 
+# pin connected to the start button that enables the firmware
+PIN_START = d1mini.PIN_D0
+
 # set the CPU frequency to 160 MHz and increase optimization level
 # This greatly improves the accuracy of the inputs.
 machine.freq(160000000)
@@ -80,3 +83,12 @@ def run():
               tuple('{:+1.2f}'.format(i) for i in v_move))
         sleep_ms(500)
 
+if __name__ == '__main__':
+    print('Push button to start or control-C to abort.')
+    wait = machine.Pin(PIN_START, machine.Pin.IN)
+    while True:
+        if wait():
+            break
+        sleep_ms(300)
+        print('.')
+    run()
