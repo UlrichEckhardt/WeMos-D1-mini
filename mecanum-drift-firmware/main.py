@@ -5,6 +5,7 @@ import micropython
 import machine
 import math
 from mecanum import MecanumDrive
+import calibration
 
 # receiver channel 2
 PIN_NICK = d1mini.PIN_D3
@@ -20,30 +21,6 @@ PIN_START = d1mini.PIN_D0
 # This greatly improves the accuracy of the inputs.
 machine.freq(160000000)
 micropython.opt_level(3)
-
-# minimum and maximum values from inputs received during calibration
-_minima = None
-_maxima = None
-
-def scale_inputs(values):
-    """scale external ranges from the receiver to internal ones"""
-    count = len(values)
-    return tuple(2 * ((value - _minima[i]) / (_maxima[i] - _minima[i])) - 1 for i, value in enumerate(values))
-
-def calibrate_inputs(inputs):
-    """interactively retrieve input value ranges"""
-    print('Move inputs to min and max positions!')
-    minima = maxima = inputs.value()
-    count = len(minima)
-    for i in range(100):
-        sleep_ms(50)
-        value = inputs.value()
-        minima = tuple(min(minima[i], value[i]) for i in range(count))
-        maxima = tuple(max(maxima[i], value[i]) for i in range(count))
-    print('minima:', tuple('{:4d}'.format(i) for i in minima))
-    print('maxima:', tuple('{:4d}'.format(i) for i in maxima))
-    global _minima, _maxima
-    _minima, _maxima = minima, maxima
 
 def filter_inputs(values):
     """transform input values
@@ -67,10 +44,12 @@ def filter_inputs(values):
 def run():
     """main entry point of the firmware"""
     # init inputs
-    # The 200ms delay are used to fill the input queue with values before calibration
+    # The 200ms delay are used to fill the input queue with values
     dc = inputs.DutyCycle([PIN_ROLL, PIN_NICK, PIN_YAW])
     sleep_ms(200)
-    calibrate_inputs(dc)
+
+    # load calibration settings
+    scale_inputs = calibration.get_transformation((PIN_ROLL, PIN_NICK, PIN_YAW,))
 
     md = MecanumDrive()
     while True:
