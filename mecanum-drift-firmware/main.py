@@ -17,6 +17,12 @@ PIN_YAW = d1mini.PIN_D4
 # pin connected to the start button that enables the firmware
 PIN_START = d1mini.PIN_D0
 
+# output pins controlling the motors for the different quadrants
+PIN_Q4 = d1mini.PIN_D8
+PIN_Q1 = d1mini.PIN_D7
+PIN_Q3 = d1mini.PIN_D6
+PIN_Q2 = d1mini.PIN_D5
+
 # set the CPU frequency to 160 MHz and increase optimization level
 # This greatly improves the accuracy of the inputs.
 machine.freq(160000000)
