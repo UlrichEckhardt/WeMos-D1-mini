@@ -17,7 +17,7 @@ def run():
         print(d.value())
         sleep_ms(200)
 
-def analyse():
+def analyse(count=100):
     """analyse input quality
 
     This takes measurements to estimate the signal-to-noise ratio of the inputs.
@@ -27,7 +27,6 @@ def analyse():
     d = inputs.DutyCycle((PIN_ROLL, PIN_NICK, PIN_YAW,))
     sleep_ms(200)
 
-    count = 100
     samples = (array.array('i', (0 for i in range(count))),
                array.array('i', (0 for i in range(count))),
                array.array('i', (0 for i in range(count))),)
@@ -53,6 +52,8 @@ def analyse():
     print('averages {}'.format(averages))
     print('minima {}'.format(minima))
     print('maxima {}'.format(maxima))
+    print('min delta {}'.format(tuple(minima[i] - averages[i] for i in range(3))))
+    print('max delta {}'.format(tuple(maxima[i] - averages[i] for i in range(3))))
     print('standard deviations {}'.format(stddevs))
 
 if __name__ == '__main__':
