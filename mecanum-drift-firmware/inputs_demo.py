@@ -15,4 +15,5 @@ def run():
         print(d.value())
         sleep_ms(200)
 
-run()
+if __name__ == '__main__':
+    run()
