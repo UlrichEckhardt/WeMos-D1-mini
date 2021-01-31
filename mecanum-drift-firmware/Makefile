@@ -8,6 +8,7 @@ ampy-setup-check:
 
 # upload the firmware to the D1
 upload: ampy-setup-check
+	ampy --port "${DEVICE}" put calibration.py
 	ampy --port "${DEVICE}" put d1mini.py
 	ampy --port "${DEVICE}" put inputs.py
 	ampy --port "${DEVICE}" put main.py
