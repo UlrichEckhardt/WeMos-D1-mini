@@ -6,6 +6,7 @@ import machine
 import math
 from mecanum import MecanumDrive
 import calibration
+import outputs
 
 # receiver channel 2
 PIN_NICK = d1mini.PIN_D3
@@ -58,6 +59,9 @@ def run():
     scale_inputs = calibration.get_transformation((PIN_ROLL, PIN_NICK, PIN_YAW,))
 
     md = MecanumDrive()
+
+    drivers = outputs.ServoDriver((PIN_Q1, PIN_Q2, PIN_Q3, PIN_Q4,))
+
     while True:
         v_in = dc.value()
         v_scaled = scale_inputs(v_in)
@@ -66,7 +70,8 @@ def run():
         print(tuple('{:+1.2f}'.format(i) for i in v_scaled),
               tuple('{:+1.2f}'.format(i) for i in v_filtered),
               tuple('{:+1.2f}'.format(i) for i in v_move))
-        sleep_ms(500)
+        drivers.drive(v_move)
+        sleep_ms(100)
 
 if __name__ == '__main__':
     print('Push button to start or control-C to abort.')
