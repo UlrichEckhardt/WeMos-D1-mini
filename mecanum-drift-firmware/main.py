@@ -66,7 +66,7 @@ def run():
         v_in = dc.value()
         v_scaled = scale_inputs(v_in)
         v_filtered = filter_inputs(v_scaled)
-        v_move = md.move(*v_filtered)
+        v_move = md.move(cx=v_filtered[0], cy=v_filtered[1], cphi=-v_filtered[2])
         print(tuple('{:+1.2f}'.format(i) for i in v_scaled),
               tuple('{:+1.2f}'.format(i) for i in v_filtered),
               tuple('{:+1.2f}'.format(i) for i in v_move))
